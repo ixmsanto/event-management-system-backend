@@ -20,7 +20,7 @@ class EventController extends Controller
         }
         try {
             Log::info('Fetching events for user: ' . $userId);
-            $events = Event::where('user_id', $userId)->get();
+            $events = Event::where('user_id', $userId)->paginate(10);
             Log::info('Events fetched: ' . $events->toJson());
             return response()->json($events);
         } catch (\Exception $e) {
