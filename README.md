@@ -1,66 +1,125 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+---
 
-## About Laravel
+### Backend README
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+```markdown
+# Event Management System - Backend
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+This is the backend repository for a Mini Event Management System built with **Laravel**. It provides a RESTful API for user authentication and event management, secured with Laravel Sanctum.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Features
+- **Authentication**: Register and login endpoints issuing Sanctum tokens.
+- **Event Management**: CRUD operations for events (list, create, update, delete).
+- **Validation**: Ensures all event fields are required and `start_time` is before `end_time`.
+- **Security**: Routes protected with `auth:sanctum` middleware; only event owners can modify their events.
+- **Pagination**: Event listing supports pagination (10 per page).
 
-## Learning Laravel
+## Tech Stack
+- **Laravel**: PHP framework for API development.
+- **Sanctum**: API token authentication.
+- **MySQL**: Database (configurable).
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Prerequisites
+- PHP (>= 8.1)
+- Composer
+- MySQL (or another supported database)
+- A frontend client (e.g., [Frontend Repo](https://github.com/ixmsanto/event-management-system-frontend.git)).
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Setup
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/ixmsanto/event-management-system-backend.git
+   cd event-management-backend
+### 2. Install Dependencies
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+    ```bash
+    composer install
 
-## Laravel Sponsors
+## 2. Configure Environment
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+    Copy the example environment file and update it:
+        ```bash
+        cp .env.example .env
+    Update .env with your database credentials:
+        ```bash
+        DB_CONNECTION=mysql  
+        DB_HOST=127.0.0.1  
+        DB_PORT=3306  
+        DB_DATABASE=event_management  
+        DB_USERNAME=root  
+        DB_PASSWORD=
 
-### Premium Partners
+## 3. Generate Application Key
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+    ```bash
+    php artisan key:generate
 
-## Contributing
+## 4. Run Migrations
+    ```bash
+    php artisan migrate
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+    This sets up the required users and events tables (assuming migrations are present).
 
-## Code of Conduct
+## 5. Start the Development Server
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    ```bash
+    php artisan serve
 
-## Security Vulnerabilities
+    API is now accessible at: http://localhost:8000
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## API Endpoints
 
-## License
+    Method	Endpoint	Description	Auth Required
+    POST	/api/register	Register a new user	No
+    POST	/api/login	Login and get token	No
+    GET	/api/events	List user’s events	Yes
+    POST	/api/events	Create a new event	Yes
+    PUT	/api/events/{id}	Update an event	Yes
+    DELETE	/api/events/{id}	Delete an event	Yes
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Event Fields
+
+    title (string, required)
+
+    description (string, required)
+
+    start_time (datetime, required)
+
+    end_time (datetime, required)
+
+    location (string, required)
+
+    category (string, required)
+
+## Pagination
+
+    Use ?page=2 or similar to paginate event listings, e.g., /api/events?page=2.
+
+## Project Structure
+
+    ├── app/
+│   ├── Http/
+│   │   ├── Controllers/      # API Controllers (AuthController, EventController)
+│   │   ├── Middleware/       # Custom Middleware (Authenticate.php)
+│   ├── Models/               # Eloquent Models (User, Event)
+├── config/                   # Configuration files (e.g., session.php, sanctum.php)
+├── routes/
+│   ├── api.php               # API Routes
+│   ├── web.php               # Web Routes (minimal)
+├── database/
+│   ├── migrations/           # Database Migrations
+
+## Notes
+
+Sanctum: Authentication is handled via Laravel Sanctum. Tokens are returned on register/login and should be sent as:
+
+Authorization: Bearer <token>
+
+Ownership: Only the user who created an event (user_id) can update or delete it.
+
+Error Handling: All responses use proper HTTP status codes:
+
+401 for unauthenticated access
+
+403 for unauthorized actions
